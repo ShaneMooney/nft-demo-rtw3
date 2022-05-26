@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useState } from 'react';
+import { NFTCard } from './components/nftCard';
 
 const Home = () => {
   const [wallet, setWalletAddress] = useState('');
@@ -51,8 +52,8 @@ const Home = () => {
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center py-2">
-      <div>
+    <div className="flex flex-col items-center justify-center gap-y-3 py-8">
+      <div className="flex w-full flex-col items-center justify-center gap-y-2">
         <input
           onChange={(e) => {
             setWalletAddress(e.target.value);
@@ -60,6 +61,8 @@ const Home = () => {
           value={wallet}
           type={'text'}
           placeholder="Add your wallet address"
+          disabled={fetchForCollection}
+          className="w-2/5 rounded-lg bg-slate-100 py-2 px-2 text-gray-800 focus:outline-blue-300 disabled:bg-slate-50 disabled:text-gray-50"
         ></input>
         <input
           onChange={(e) => {
@@ -68,10 +71,12 @@ const Home = () => {
           value={collection}
           type={'text'}
           placeholder="Add the collection address"
+          className="w-2/5 rounded-lg bg-slate-100 py-2 px-2 text-gray-800 focus:outline-blue-300 disabled:bg-slate-50 disabled:text-gray-50"
         ></input>
-        <label>
+        <label className="text-gray-600">
           <input
             type={'checkbox'}
+            className="mr-2"
             onChange={(e) => {
               setFetchForCollection(e.target.checked);
             }}
@@ -79,6 +84,7 @@ const Home = () => {
           Fetch for collection
         </label>
         <button
+          className="mt-3 w-1/5 rounded-sm bg-blue-400 px-4 py-2 text-white disabled:bg-slate-500"
           onClick={() => {
             if (fetchForCollection) {
               fetchNFTsForCollection();
@@ -89,6 +95,9 @@ const Home = () => {
         >
           Let's go
         </button>
+      </div>
+      <div className="mt-4 flex w-5/6 flex-wrap justify-center gap-y-12 gap-x-6">
+        {NFTs.length && NFTs.map((nft) => <NFTCard nft={nft}></NFTCard>)}
       </div>
     </div>
   );
