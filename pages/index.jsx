@@ -8,6 +8,7 @@ const Home = () => {
   const [collection, setCollectionAddress] = useState('');
   const [NFTs, setNFTs] = useState([]);
   const [fetchForCollection, setFetchForCollection] = useState(false);
+  const [pagification, setPagification] = useState('');
 
   const fetchNFTs = async () => {
     let nfts;
@@ -36,7 +37,7 @@ const Home = () => {
   const fetchNFTsForCollection = async () => {
     if (collection.length) {
       const baseURL = `https://eth-mainnet.alchemyapi.io/v2/${process.env.NEXT_PUBLIC_API_KEY}/getNFTsForCollection/`;
-      const fetchURL = `${baseURL}?contractAddress=${collection}&withMetadata=${'true'}`;
+      const fetchURL = `${baseURL}?contractAddress=${collection}&withMetadata=${'true'}&startToken=${pagification}`;
 
       var requestOptions = { method: 'GET' };
 
@@ -47,6 +48,7 @@ const Home = () => {
       if (nfts) {
         console.log('NFTs in collection:', nfts);
         setNFTs(nfts.nfts);
+        setPagification(nfts.nextToken);
       }
     }
   };
@@ -99,6 +101,15 @@ const Home = () => {
       <div className="mt-4 flex w-5/6 flex-wrap justify-center gap-y-12 gap-x-6">
         {NFTs.length && NFTs.map((nft) => <NFTCard nft={nft}></NFTCard>)}
       </div>
+      <button
+        className="mt-3 w-1/5 rounded-sm bg-blue-400 px-4 py-2 text-white disabled:bg-slate-500"
+        onClick={() => {
+          setNFTs([]);
+          fetchNFTsForCollection();
+        }}
+      >
+        Load More
+      </button>
     </div>
   );
 };
